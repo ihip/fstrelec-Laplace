@@ -1,0 +1,100 @@
+
+
+#sve{
+    width: 270px;
+    position: fixed;
+    z-index: 5;
+    top: 80px;
+    left: 10px;
+    background: #b4b4b4cc;
+    overflow-x: hidden;
+    padding: 8px 0;
+	border: #a96458;
+        border-top-style: none;
+        border-right-style: none;
+        border-bottom-style: none;
+        border-left-style: none;
+    border-style: outset;
+	border-radius: 20px;
+	
+}
+
+
+#debug {
+    margin-top: 650px;
+}
+
+
+#start {
+    padding: 20px;
+}
+
+#broj {
+    width: 45%;
+}
+
+#brojIteracija {
+    width: 40%;
+}
+
+#ekvipotencijala {
+    width: 40%;
+}
+
+
+#canvasesdiv {
+    margin-left: 273px;
+}
+
+
+#ctx {
+    /* border: #406b90; */
+    /* border-style: groove; */
+   
+	
+	z-index: 2;
+position:absolute;
+left:60px;
+top:00px;
+}
+
+#ctx2 {
+    /* border: #406b90; */
+    /* border-style: groove; */
+    
+	z-index: 1;
+	position:absolute;
+	left:00px;
+	top:0px;
+}
+
+.slider {
+    /* -webkit-appearance: none; */
+    width: 85%;
+    height: 25px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    /* background: #4CAF50; */
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    /* background: #4CAF50; */
+    cursor: pointer;
+}
