@@ -1,176 +1,152 @@
 ﻿	//funkcija koja se injecta na body onload
-						function injectIntoHtml() {	
+						function ubaciUHtml() {	
 						
-						// var deltaVectorX=0;
-						// var deltaVectorY=0;
-						// var deltaVectorXY=0;
-						var vectorMaxAbsolute;
-						// var deltaVectorStariX=0;
-						// var deltaVectorStariY=0;
-						var vectorBoolean=0;
+						
+						var vektorMaxAbsolutni;
+						var vektorBoolean=0;
 						var dubina;
 						var	duzina;
 						var	 brojBoxova;
 						
-						var koefGrida;
+						var koefResetke;
 						
-						var	vectorXMax=-50000000;
-						var vectorXMin=50000000000;
-						var	vectorYMax=-50000000;
-						var vectorYMin=50000000000;
-						var	vectorXYMax=-50000000;
-						var vectorXYMin=50000000000;
+						var	vektorXMax=-50000000;
+						var vektorXMin=50000000000;
+						var	vektorYMax=-50000000;
+						var vektorYMin=50000000000;
+						var	vektorXYMax=-50000000;
+						var vektorXYMin=50000000000;
 						
 						
 						
 						//broj redova/stupaca dobiven od korisnika
-						var widthG; 
-						var heightG;
-						//najveci
-						var largest=0;					
+						var sirinaG; 
+						var visinaG;
+						//najveciDelta
+						var najveciDelta=0;					
 						var sX, sY;	
 						var delta = 0;
-						var oldValueOfBox = 0.0;
-						var valueOfBox = new Array();						//broj u kvadraticu (2d array)
-						var typeOfBox = new Array();						//tip boxa (d=dirichlet,n=neuman, ili h=potencijal )
-						gridSize();
-						var boxSize = 30; // broj boxova(rezolucija(h/w)/boxSize) 
-						var width=widthG*boxSize;  //sirina canvasa (sluzi za funkciju crtanja i odredjivanja broja boxova)
-						var height=heightG*boxSize; //visina
+						var stariPotencijal = 0.0;
+						var potencijal = new Array();						//broj u kvadraticu (2d array)
+						var rubniUvjet = new Array();						//tip boxa (d=dirichlet,n=neuman, ili h=potencijal )
+						velicinaResetke();
+						var boxVelicina = 30; // broj boxova(rezolucija(h/w)/boxVelicina) 
+						var sirina=sirinaG*boxVelicina;  //sirina canvasa (sluzi za funkciju crtanja i odredjivanja broja boxova)
+						var visina=visinaG*boxVelicina; //visina
 						
-						//smallest, biggest za grayscale
-						var smallest;
-						var biggest=0;
+						//najmanji, najveci za rgbPostotak
+						var najmanji;
+						var najveci=0;
 						var deltaExtrema=0;
 						var valueMSmallest=0;
-						var grayscale;
-						var grayscaleIntensity;
-						var grayscaleString;
+						var rgbPostotak;
+						var rgbPostotakIntezitet;
+						var rgbPostotakString;
 						var broj;//potencijal
 						
-						// var canvas = document.createElement('canvas'),ctx = canvas.getContext("2d");
+					
 						
 						var canvas = document.getElementById("ctx"); ctx = canvas.getContext("2d");
 						var canvas2 = document.getElementById("ctx2"); ctx2 = canvas2.getContext("2d");
 						
-						// canvas.id ="ctx";
-						canvas.width=width;
-						canvas.height=height;
-						canvas2.width=width+60;
-						canvas2.height=height+60;
-						 // document.body.appendChild(canvas);
-						 // document.body.appendChild(canvas2);
+					
+						canvas.width=sirina;
+						canvas.height=visina;
+						canvas2.width=sirina+60;
+						canvas2.height=visina+60;
+					
 						
-						canvas.addEventListener('mousedown', clickDown);
-						canvas.addEventListener('mouseup', clickUp);
-						canvas.addEventListener('touchstart', clickDown);
-						canvas.addEventListener('touchend', clickUp);
-
+						canvas.addEventListener('mousedown', clickDolje);
+						canvas.addEventListener('mouseup', clickGore);
 						
-						
-						
-						
-
-						
-						
-						function clickDown(){								
+				
+						function clickDolje(){								
 							
-							
-							
+	
 
-						canvas.addEventListener('mousemove', handleClick);
-						canvas.addEventListener('touchmove', handleClick);
+						canvas.addEventListener('mousemove', lokacijaClicka);	
 																							
 						}
 
-						function clickUp(){																				
+						function clickGore(){																				
 								
-						canvas.removeEventListener("mousemove", handleClick);
-						canvas.removeEventListener("touchmove", handleClick);
-
+						canvas.removeEventListener("mousemove", lokacijaClicka);
 																				
 						}
 						
-						
-
+	
 						//broj redova/stupaca
-						var rowNumber = parseInt(width / boxSize); 
-						var columnNumber = parseInt(height / boxSize);
+						var brojRedova = parseInt(sirina / boxVelicina); 
+						var brojStupaca = parseInt(visina / boxVelicina);
 
 						//popup za velicinu grida
 
-						function gridSize() {
+						function velicinaResetke() {
 							 dubina = prompt("Dubina profila", "5");
 							duzina = prompt("dužina profila", "8");
 							 brojBoxova = prompt("Broj boxova po jedinici dubine/dužine", "5");
 			
 			 
-			 heightG = dubina*brojBoxova+1;
-			 widthG = duzina*brojBoxova+1;
-			 koefGrida=1/brojBoxova;
+			 visinaG = dubina*brojBoxova+1;
+			 sirinaG = duzina*brojBoxova+1;
+			 koefResetke=1/brojBoxova;
 			 
-			 	document.getElementById("koefGrid").innerHTML = "Koeficijent grida: "+koefGrida;
+			 	document.getElementById("koefResetka").innerHTML = "Koeficijent rešetke: "+koefResetke;
     
 		 if(dubina % 1 === 0 && duzina % 1 === 0 && brojBoxova % 1 === 0  ) {
 				
 }	
 				else {
 					window.alert("Upisite broj, a ne slova!");
-					gridSize();
+					velicinaResetke();
        
 				}
     
-   }
-						
-						//TEST ZA CANVAS 2 (fiz. koord i borders)
-						function ruler() {
-							var brojTrenutnoX=0-koefGrida;
-							var brojTrenutnoY=0-koefGrida;
-							
+   }	
+						//TEST ZA CANVAS 2 (fiz. koord.)
+						function koordSustav() {
+							var brojTrenutnoX=0-koefResetke;
+							var brojTrenutnoY=0-koefResetke;
 							var brojTrenutnoXC;
 							var brojTrenutnoYC;
 							ctx2.beginPath();
 						ctx2.lineWidth=3;
 						ctx2.moveTo(60,0);
-						ctx2.lineTo(60,heightG*boxSize);
+						ctx2.lineTo(60,visinaG*boxVelicina);
 						
-						ctx2.moveTo(58+widthG*boxSize,0);
-						ctx2.lineTo(58+widthG*boxSize,heightG*boxSize);
+						ctx2.moveTo(58+sirinaG*boxVelicina,0);
+						ctx2.lineTo(58+sirinaG*boxVelicina,visinaG*boxVelicina);
 						
-						ctx2.moveTo(60,heightG*boxSize); 
-						ctx2.lineTo(widthG*boxSize+60,heightG*boxSize); 
+						ctx2.moveTo(60,visinaG*boxVelicina); 
+						ctx2.lineTo(sirinaG*boxVelicina+60,visinaG*boxVelicina); 
 						
 							ctx2.moveTo(60,2); 
-						ctx2.lineTo(widthG*boxSize+60,2); 
+						ctx2.lineTo(sirinaG*boxVelicina+60,2); 
 						
-						
-						
+
 						 ctx2.stroke();
-						for (var i=0;i<widthG;i++){
+						for (var i=0;i<sirinaG;i++){
 						 //x os
-							brojTrenutnoX=(brojTrenutnoX+koefGrida)
+							brojTrenutnoX=(brojTrenutnoX+koefResetke)
 							brojTrenutnoXC=+brojTrenutnoX.toFixed(2);
-							
-							
-							// console.log(brojTrenutnoX+"capcap");
-							// console.log(koefGrida);
+
 							
 							ctx2.lineWidth=1;
-							ctx2.moveTo(60+((1/2)*boxSize+boxSize*i),heightG*boxSize-7);
-						ctx2.lineTo(60+((1/2)*boxSize+boxSize*i),heightG*boxSize+7);
+							ctx2.moveTo(60+((1/2)*boxVelicina+boxVelicina*i),visinaG*boxVelicina-7);
+						ctx2.lineTo(60+((1/2)*boxVelicina+boxVelicina*i),visinaG*boxVelicina+7);
 						if (brojTrenutnoXC==Math.floor(brojTrenutnoXC)){
 							
 							
 								ctx2.font = "bold 15px Arial";
-						ctx2.fillText(brojTrenutnoXC,55+((1/2)*boxSize+boxSize*i),heightG*boxSize+28)
+						ctx2.fillText(brojTrenutnoXC,55+((1/2)*boxVelicina+boxVelicina*i),visinaG*boxVelicina+28)
 							
 						}
 						
 						
 						else{
 						ctx2.font = "11px Arial";
-						ctx2.fillText(brojTrenutnoXC,50+((1/2)*boxSize+boxSize*i),heightG*boxSize+26)
-						ctx2.fillText(brojTrenutnoXC,50+((1/2)*boxSize+boxSize*i),heightG*boxSize+26)
+						ctx2.fillText(brojTrenutnoXC,50+((1/2)*boxVelicina+boxVelicina*i),visinaG*boxVelicina+26)
+						ctx2.fillText(brojTrenutnoXC,50+((1/2)*boxVelicina+boxVelicina*i),visinaG*boxVelicina+26)
 						}
 						
 						
@@ -179,78 +155,63 @@
 						}
 						//y os 
 						
-						for (var i=0;i<heightG;i++){
+						for (var i=0;i<visinaG;i++){
 							
-							var capCap = heightG-i-3
+							var brojZaKoord = visinaG-i-3
 						
-						ctx2.moveTo(60-7,((1/2)*boxSize+boxSize*i));
-						ctx2.lineTo(60+7,((1/2)*boxSize+boxSize*i));
+						ctx2.moveTo(60-7,((1/2)*boxVelicina+boxVelicina*i));
+						ctx2.lineTo(60+7,((1/2)*boxVelicina+boxVelicina*i));
 						
-						brojTrenutnoY=(brojTrenutnoY+koefGrida);
+						brojTrenutnoY=(brojTrenutnoY+koefResetke);
 						brojTrenutnoYC=+brojTrenutnoY.toFixed(2);
 						
 								if (brojTrenutnoYC==Math.floor(brojTrenutnoYC)){
 							
 							
 								ctx2.font = "bold 15px Arial";
-						ctx2.fillText(brojTrenutnoYC, 60-34,((1/2)*boxSize+boxSize*capCap+2*boxSize+5))
+						ctx2.fillText(brojTrenutnoYC, 60-34,((1/2)*boxVelicina+boxVelicina*brojZaKoord+2*boxVelicina+5))
 							
 						}
 						
 						
 						else{
 						ctx2.font = "11px Arial";
-						ctx2.fillText(brojTrenutnoYC, 60-38,((1/2)*boxSize+boxSize*capCap+2*boxSize+5))
+						ctx2.fillText(brojTrenutnoYC, 60-38,((1/2)*boxVelicina+boxVelicina*brojZaKoord+2*boxVelicina+5))
 						}
-						
-						
-						
-						
+	
 						}
 						
 						ctx2.stroke();
 						}
 						
-						ruler();
-						
-						 
-					
-						// ctx2.fillRect(0, 10, heightG, boxSize);
-						
-						
-						
-						
-						
-						//gotovo
+						koordSustav();
 
-						//izrada matrice za valueOfBox i typeOfBox
+						//izrada matrice za potencijal i rubniUvjet
 
-						function matrix() {
+						function inicijalizacija() {
 
 						
 						
-							for (var i = 0; i < rowNumber; i++) {
+							for (var i = 0; i < brojRedova; i++) {
 									 																								 
-								valueOfBox[i] = new Array();
-								typeOfBox[i]= new Array();
+								potencijal[i] = new Array();
+								rubniUvjet[i]= new Array();
 
 								
-								for (var j = 0; j < columnNumber; j++) {
+								for (var j = 0; j < brojStupaca; j++) {
 
+		
+									rubniUvjet[i][j]="h"
+									potencijal[i][j] = 0.0;
 									
+									 rubniUvjet[0][j] = "n";
+									 potencijal[0][j] = 0.0;
 									
+									 rubniUvjet[i][0] = "n";
+									 potencijal[i][0] = 0.0;
 									
-									typeOfBox[i][j]="h"
-									valueOfBox[i][j] = 0.0;
-									
-									 typeOfBox[0][j] = "n";
-									 valueOfBox[0][j] = 0.0;
-									
-									 typeOfBox[i][0] = "n";
-									 valueOfBox[i][0] = 0.0;
-									
-									 typeOfBox[i][parseInt(heightG-1)] = "n";
-									 valueOfBox[i][parseInt(heightG-1)] = 0.0;
+									 rubniUvjet[i][parseInt(visinaG-1)] = "n";
+									 potencijal[i][parseInt(visinaG-1)] = 0.0;
 																																								
 
 								}
@@ -258,65 +219,58 @@
 							}
 
 						
-						 for (var j = 0; j < columnNumber; j++) {
+						 for (var j = 0; j < brojStupaca; j++) {
 
 									
-									 typeOfBox[parseInt(widthG-1)][j] = "n";
-									 valueOfBox[parseInt(widthG-1)][j] = 0.0;
+									 rubniUvjet[parseInt(sirinaG-1)][j] = "n";
+									 potencijal[parseInt(sirinaG-1)][j] = 0.0;
 																
 																																		
 
 								 }
 						
-
-						
-
-
-
-							
+	
 						}
 						
 						
 						//dirichlet za potencijale
 						
-						function showNumbersDirichlet() {
+						function pokaziBrojeveDrichlet() {
 									var krug = '\u25C9';
 									
 									ctx.font = "bold 9px Arial";
-							for (var i = 0; i < rowNumber; i++) {
+							for (var i = 0; i < brojRedova; i++) {
 
 								
 
 
-								for (var j = 0; j < columnNumber; j++) {
+								for (var j = 0; j < brojStupaca; j++) {
 
 								
-									var gridNumberShifti=boxSize*i+1;
-									var gridNumberShiftj=boxSize*j+(0.9*boxSize);
-									var gridNumberShiftiKrug=boxSize*i+(0.4*boxSize);
-									var gridNumberShiftjKrug=boxSize*j+(0.6*boxSize); 
+									var BrojUGriduPomaki=boxVelicina*i+1;
+									var BrojUGriduPomakj=boxVelicina*j+(0.9*boxVelicina);
+									var BrojUGriduPomakiKrug=boxVelicina*i+(0.4*boxVelicina);
+									var BrojUGriduPomakjKrug=boxVelicina*j+(0.6*boxVelicina); 
 									
+		
 									
-								
-									
-									
-									if (typeOfBox[i][j]=="d"){
+									if (rubniUvjet[i][j]=="d"){
 										
 										ctx.fillStyle = "white";  
 										
-										ctx.fillRect(i * boxSize, j * boxSize, boxSize, boxSize);
+										ctx.fillRect(i * boxVelicina, j * boxVelicina, boxVelicina, boxVelicina);
 										
 										
 										 ctx.fillStyle = "rgba(104, 180, 247, 0.5)";  
 										
-										ctx.fillRect(i * boxSize, j * boxSize, boxSize, boxSize);
+										ctx.fillRect(i * boxVelicina, j * boxVelicina, boxVelicina, boxVelicina);
 										
 										
 										
 										ctx.fillStyle = "black";  
 										 ctx.font = "15px Arial";
 										
-										ctx.fillText(valueOfBox[i][j],gridNumberShifti,gridNumberShiftj);
+										ctx.fillText(potencijal[i][j],BrojUGriduPomaki,BrojUGriduPomakj);
 										
 										ctx.font = "bold 9px Arial";
 										
@@ -324,38 +278,35 @@
 						
 						
 						//dirichlet gotov
-						
-						
-						
 
+						
 						//funkcija za ispis brojeva u grid i boje rubova
 
-						function showNumbers() {
+						function pokaziBrojeve() {
 									var krug = '\u25C9';
 									
 									ctx.font = "bold 9px Arial";
-							for (var i = 0; i < rowNumber; i++) {
+							for (var i = 0; i < brojRedova; i++) {
+
+
+
+								for (var j = 0; j < brojStupaca; j++) {
 
 								
-
-
-								for (var j = 0; j < columnNumber; j++) {
-
-								
-									var gridNumberShifti=boxSize*i+1;
-									var gridNumberShiftj=boxSize*j+(0.9*boxSize);
-									var gridNumberShiftiKrug=boxSize*i+(0.4*boxSize);
-									var gridNumberShiftjKrug=boxSize*j+(0.6*boxSize); 
+									var BrojUGriduPomaki=boxVelicina*i+1;
+									var BrojUGriduPomakj=boxVelicina*j+(0.9*boxVelicina);
+									var BrojUGriduPomakiKrug=boxVelicina*i+(0.4*boxVelicina);
+									var BrojUGriduPomakjKrug=boxVelicina*j+(0.6*boxVelicina); 
 									
 									
-										if ( typeOfBox[i][j]=="n"){}
+										if ( rubniUvjet[i][j]=="n"){}
 									
 									
-								else	if (typeOfBox[i][j]=="d"){
+								else	if (rubniUvjet[i][j]=="d"){
 										ctx.fillStyle = "black";  
 										 ctx.font = "15px Arial";
 										
-										ctx.fillText(valueOfBox[i][j],gridNumberShifti,gridNumberShiftj);
+										ctx.fillText(potencijal[i][j],BrojUGriduPomaki,BrojUGriduPomakj);
 										
 										ctx.font = "bold 9px Arial";
 										
@@ -364,30 +315,25 @@
 									
 									else {
 									
-									if ( document.getElementById("checkNN").checked==true){
+									if ( document.getElementById("provjeriN").checked==true){
 										
-										if ( document.getElementById("checkC").checked==true){
+										if ( document.getElementById("provjeriC").checked==true){
 										
- ctx.font = "bold 9px Arial";
-										// ctx.fillStyle = "rgb(5, 147, 59)";
-										
-										// var cap =+valueOfBox[i][j].toFixed(2);
-										
-										// ctx.fillText(cap,gridNumberShifti,gridNumberShiftj);
-										
+										ctx.font = "bold 9px Arial";
+						
 										}
 										
 										else {
 										
 										ctx.fillStyle = "black";
 										
-										var cap =+valueOfBox[i][j].toFixed(2);
+										var zaokruzi =+potencijal[i][j].toFixed(2);
 										
-										ctx.fillText(cap,gridNumberShifti,gridNumberShiftj);
+										ctx.fillText(zaokruzi,BrojUGriduPomaki,BrojUGriduPomakj);
 										ctx.font = "8px Arial";
-											if ( document.getElementById("checkN").checked==false)
+											if ( document.getElementById("provjeriV").checked==false)
 									{
-										 ctx.fillText(krug,gridNumberShiftiKrug,gridNumberShiftjKrug);	
+										 ctx.fillText(krug,BrojUGriduPomakiKrug,BrojUGriduPomakjKrug);	
 								}
 									
 										 ctx.font = "bold 9px Arial";
@@ -397,22 +343,18 @@
 									
 									else {
 
-									if ( document.getElementById("checkC").checked==true){
-										ctx.fillStyle = "black";//modro plavo
-										ctx.fillText(valueOfBox[i][j],gridNumberShifti,gridNumberShiftj);
-										// ctx.fillText(krug,gridNumberShiftiKrug,gridNumberShiftjKrug);
+									if ( document.getElementById("provjeriC").checked==true){
+										ctx.fillStyle = "black";
+										ctx.fillText(potencijal[i][j],BrojUGriduPomaki,BrojUGriduPomakj);
 									}
 									
 									else {
 									ctx.fillStyle = "black";
-									ctx.fillText(valueOfBox[i][j],gridNumberShifti,gridNumberShiftj);
-									// ctx.fillText(krug,gridNumberShiftiKrug,gridNumberShiftjKrug);
+									ctx.fillText(potencijal[i][j],BrojUGriduPomaki,BrojUGriduPomakj);			
 									}
 									}
 									}
-									
-									
-									
+	
 
 								}
 
@@ -426,42 +368,32 @@
 						//funkcija za boje rubova neumana i dirichleta
 						
 						
-							function showEdges() {
-								
-								
+							function pokaziRubove() {
 
-							for (var i = 0; i < rowNumber; i++) {
-
-								
+							for (var i = 0; i < brojRedova; i++) {
 
 
-								for (var j = 0; j < columnNumber; j++) {
-
-								
-								
+								for (var j = 0; j < brojStupaca; j++) {
+	
 									
-									
-									if (typeOfBox[i][j]=="d"){
+									if (rubniUvjet[i][j]=="d"){
 										
-										 
-										
-										
+						
 										 ctx.fillStyle = "rgba(104, 180, 247, 0.5)";  
 										
-										ctx.fillRect(i * boxSize, j * boxSize, boxSize, boxSize);
+										ctx.fillRect(i * boxVelicina, j * boxVelicina, boxVelicina, boxVelicina);
 										
 									}
 
-									if (typeOfBox[i][j]=="n"){
+									if (rubniUvjet[i][j]=="n"){
 										
 										 	ctx.fillStyle = "rgba(167, 30, 6, 0.5)";
 										
-										ctx.fillRect(i * boxSize, j * boxSize, boxSize, boxSize);
+										ctx.fillRect(i * boxVelicina, j * boxVelicina, boxVelicina, boxVelicina);
 										
 									}
 
-									
-									
+					
 
 								}
 
@@ -470,7 +402,7 @@
 							
 						}
 						
-						//pokusaj ekvipotencijala take 3 
+						//pokusaj ekvipotencijala take 3 (i dalje beta)
 						
 						function ekvipotencijale(meta){
 							
@@ -479,24 +411,22 @@
 							
 							 var meta;
 							
-								var spojilaSe= new Array();
+					var spojilaSe= new Array();
 					var spajaloSeUNju= new Array();
 					var xMeta = new Array();
 					var yMeta= new Array();
 							
 							
-								for (var i = 0; i < rowNumber; i++) {
-
-								
+								for (var i = 0; i < brojRedova; i++) {
 
 
-								for (var j = 0; j < columnNumber; j++) {
+								for (var j = 0; j < brojStupaca; j++) {
 
 									
 								
-							var interpolationCenteri=boxSize*i+(0.5*boxSize-2);
-							var interpolationCenterj=boxSize*j+(0.5*boxSize); 
-							var intezitet=valueOfBox[i][j];
+							var interpolationCenteri=boxVelicina*i+(0.5*boxVelicina-2);
+							var interpolationCenterj=boxVelicina*j+(0.5*boxVelicina); 
+							var intezitet=potencijal[i][j];
 							
 							
 						
@@ -508,16 +438,14 @@
 							
 									
 									
-										function weFoundHim(smjer){
+										function nasliSmoGa(smjer){
 											
 											razlikaPolja=Math.abs(smjer-intezitet);
 											razlikaMeteIPolja=meta-intezitet;
 											omjer=razlikaMeteIPolja/razlikaPolja;
-											udaljenost=boxSize*omjer;
+											udaljenost=boxVelicina*omjer;
 											
-											console.log("smjer:"+smjer);
-											console.log("intezitet:"+intezitet);
-											console.log("bla");
+										
 										}
 									
 									function crtaj(){
@@ -527,11 +455,7 @@
 										var prviBroj=1;
 										 for (var i = 0; i < xMeta.length; i++) {
 										
-												
-										
-											
-												// ctx.font = "bold 8px Arial";
-											 // ctx.fillText(i,xMeta[i],yMeta[i]);
+						
 											for (var ii = 0; ii < xMeta.length; ii++) {
 												
 												
@@ -542,24 +466,19 @@
 											//za bolju verziju nekad
 
 											
-											 var udaljenostSolver=Math.abs(Math.sqrt(Math.pow(xMeta[i]-xMeta[ii],2)+Math.pow(yMeta[i]-yMeta[ii],2)));
+											 var formulaUdaljenost=Math.abs(Math.sqrt(Math.pow(xMeta[i]-xMeta[ii],2)+Math.pow(yMeta[i]-yMeta[ii],2)));
 											
-											//
+										
 											
 												if ( spojilaSe[i]=="da" && spajaloSeUNju=="da"){}
 												
 											else {
 											
-											if (xUdaljenostSuseda<(boxSize+(1)) && yUdaljenostSuseda<(boxSize+1)  ){
+											if (xUdaljenostSuseda<(boxVelicina+(1)) && yUdaljenostSuseda<(boxVelicina+1)  ){
 												
-											
-												
-									
-								  		
-								
+			
 										
-										
-											ctx.beginPath();
+								ctx.beginPath();
 								ctx.lineWidth = 2;
 							ctx.fillStyle="black"
 							spojilaSe[i]="da"
@@ -570,11 +489,7 @@
 												
 								
 									if (prviBroj==1){
-											// ctx.fillStyle="red"
-											 // ctx.font = "bold 14px Arial";
-											// ctx.fillText(meta,xMeta[i+3],yMeta[i+3]);
-											// prviBroj=0;
-											
+										
 											
 											
 										}	
@@ -584,282 +499,173 @@
 											}
 												
 											 }
-												
-												
-												
-												
+								
 												
 											}
 											
-											
-											
+										
 											}
 
-										
-										
-										 				
-										
-									}
-									
-									
-									
-									if (typeOfBox[i][j]=="d"){
-										
-										
-										
-									}
-
-									if (typeOfBox[i][j]=="n"){
-										
-										
-										
-									}
-
-									
-									
-									if (typeOfBox[i][j]=="h"){
-											
-										if(valueOfBox[i][j]<=meta){
-											
-											// ctx.fillText(".",interpolationCenteri,interpolationCenterj)
-											
-											
-											if(valueOfBox[i+1][j]>=meta){
-												var intezitetR=valueOfBox[i+1][j];
-												
-												console.log("desno")
-												console.log(interpolationCenteri+"desno x");
-												console.log(interpolationCenterj+"desno y");
-												
 					
-								
-								
-												weFoundHim(intezitetR);
+										
+									}
+									
+									
+									
+									if (rubniUvjet[i][j]=="d"){
+										
+										
+										
+									}
+
+									if (rubniUvjet[i][j]=="n"){
+										
+										
+										
+									}
+
+									
+									
+									if (rubniUvjet[i][j]=="h"){
+											
+										if(potencijal[i][j]<=meta){
+	
+											if(potencijal[i+1][j]>=meta){
+												var intezitetR=potencijal[i+1][j];
+												
+	
+												nasliSmoGa(intezitetR);
 												
 												xMeta.push(interpolationCenteri+udaljenost);
 												yMeta.push(interpolationCenterj);
 												
-												
-												console.log(xMeta);
-												console.log(yMeta);
-												console.log(udaljenost+"udaljenost");
-												console.log(omjer+"omjer");
-												console.log("desno")
-												console.log();
-												
-												
+			
 											}
-											if(valueOfBox[i-1][j]>=meta){
+											if(potencijal[i-1][j]>=meta){
 											
 											
-											 var intezitetL=valueOfBox[i-1][j];
-											console.log("LEVO")
-											 weFoundHim(intezitetL);
+											 var intezitetL=potencijal[i-1][j];
+										
+											 nasliSmoGa(intezitetL);
 											 xMeta.push(interpolationCenteri-udaljenost);
 												 yMeta.push(interpolationCenterj);
-												 
-												 console.log(interpolationCenteri+" x");
-												console.log(interpolationCenterj+" y");
-												 console.log(xMeta);
-												console.log(yMeta);
-												console.log("LEVO GOTOVO")
+											
 											
 										}
-											if(valueOfBox[i][j+1]>=meta){
+											if(potencijal[i][j+1]>=meta){
 											
 											
-												 var intezitetD=valueOfBox[i][j+1];
+												 var intezitetD=potencijal[i][j+1];
 											
-											console.log("dole")
-											weFoundHim(intezitetD);
+										
+											nasliSmoGa(intezitetD);
 											xMeta.push(interpolationCenteri);
 												 yMeta.push(interpolationCenterj+udaljenost);
 												 
-												
-												 console.log(interpolationCenteri+" x");
-												console.log(interpolationCenterj+" y");
-												 console.log(xMeta);
-												console.log(yMeta);
-												console.log("DOLE GOTOVO")
-												 
+		 
 											
 										 }
-											 if (valueOfBox[i][j-1]>=meta){
-												var intezitetU=valueOfBox[i][j-1];
-												 console.log("Gore")
-												 weFoundHim(intezitetU);
+											 if (potencijal[i][j-1]>=meta){
+												var intezitetU=potencijal[i][j-1];
+												
+												 nasliSmoGa(intezitetU);
 											 xMeta.push(interpolationCenteri);
 												yMeta.push(interpolationCenterj-udaljenost);
-												
-												
-												console.log(interpolationCenteri+" x");
-												console.log(interpolationCenterj+" y");
-												 console.log(xMeta);
-												console.log(yMeta);
-												console.log("Gore GOTOVO")
+
 												
 												 }
-											
-											
-											
-											
+					
 										}
 										
-										
-										
-										
+																														
 									}
-
 									
-
 								}
-
-								
-								
-								
+																								
 							}
 
-							
-							
+													
 						crtaj();
 
 							
 						}
 						
+					
+						// vizualizacija svakog potencijala bojom
 						
 						
-						
-						
-						
-						
-							
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						// vizualizacija svakog potencijala grayscale-om
-						
-						
-							function showValuesInColor() {
+							function prikaziVrijednostiBojom() {
 								
 								
 								
 								ctx.clearRect(0, 0, canvas.width, canvas.height);
-								showEdges();
-								gridBorders();
+								pokaziRubove();
+								ruboviResetke();
 
-							for (var i = 0; i < rowNumber; i++) {
-
-								
+							for (var i = 0; i < brojRedova; i++) {
 
 
-								for (var j = 0; j < columnNumber; j++) {
+								for (var j = 0; j < brojStupaca; j++) {
 
 								
 								
-									if (typeOfBox[i][j]=="h"){
+									if (rubniUvjet[i][j]=="h"){
 										
-									 										 								
-										
-										
-										 // if (biggest < valueOfBox[i][j]){
-											 
-											 // biggest=valueOfBox[i][j];
-										 // }
-										 
-										 // if (valueOfBox[i][j]==0){}
-										 
-										 // else{
-										
-										// if (smallest > valueOfBox[i][j]){
-											 
-											 // smallest=valueOfBox[i][j];
-										 // }
-										 
-										 
-										 // }
-										
-										
-										 	
-										
+									 										 																																				
+										 											
 									}
-
-									
-									
+	
 
 								}
 
-								
-								
+
 								}
 								
-								deltaExtrema=biggest-smallest;
-								
-								
+								deltaExtrema=najveci-najmanji;
 
-							for (var i = 0; i < rowNumber; i++) {
-
-								
+							for (var i = 0; i < brojRedova; i++) {
 
 
-								for (var j = 0; j < columnNumber; j++) {
+								for (var j = 0; j < brojStupaca; j++) {
 
-								var gridNumberShifti=boxSize*i+1;
-								var gridNumberShiftj=boxSize*j+(0.9*boxSize);	
+								var BrojUGriduPomaki=boxVelicina*i+1;
+								var BrojUGriduPomakj=boxVelicina*j+(0.9*boxVelicina);	
 								
-									if (typeOfBox[i][j]=="h"){
+									if (rubniUvjet[i][j]=="h"){
 								
 								
-								valueMSmallest=valueOfBox[i][j]-smallest;
+								valueMSmallest=potencijal[i][j]-najmanji;
 								
-								grayscale=valueMSmallest/deltaExtrema;
-								grayscaleIntensity=Math.round(grayscale*255);
-							var grayscaleIntensityOpposite=255-grayscaleIntensity;
-							var cap =+valueOfBox[i][j].toFixed(2);
+								rgbPostotak=valueMSmallest/deltaExtrema;
+								rgbPostotakIntezitet=Math.round(rgbPostotak*255);
+							var rgbPostotakIntezitetSuprotno=255-rgbPostotakIntezitet;
+							var zaokruzi =+potencijal[i][j].toFixed(2);
 								
-							grayscaleString="rgba(" + grayscaleIntensity + "," + grayscaleIntensity + "," + grayscaleIntensity + ")";	
-				var	grayscaleStringOpposite="rgba(" + Math.round(grayscaleIntensity*1) + "," + (Math.round(grayscaleIntensityOpposite*0.5)) + "," + Math.round(grayscaleIntensityOpposite*1) + ")";
+						
+				var	bojaString="rgba(" + Math.round(rgbPostotakIntezitet*1) + "," + (Math.round(rgbPostotakIntezitetSuprotno*0.5)) + "," + Math.round(rgbPostotakIntezitetSuprotno*1) + ")";
 					
+
+								ctx.fillStyle = bojaString;
+											
+								ctx.fillRect(i * boxVelicina, j * boxVelicina, boxVelicina, boxVelicina);
 								
-								
-								
-								ctx.fillStyle = grayscaleStringOpposite;
-								
-								
-								
-										
+								if ( document.getElementById("provjeriN").checked==true) {
 									
-								ctx.fillRect(i * boxSize, j * boxSize, boxSize, boxSize);
-								
-								if ( document.getElementById("checkNN").checked==true) {
-									
-									// if (100 < grayscaleIntensityOpposite && 160> grayscaleIntensityOpposite) {
-										
-										// ctx.fillStyle = "white";
-									// ctx.fillText(cap,gridNumberShifti,gridNumberShiftj);
-										
-									// }
-									// else {
+							
 									ctx.fillStyle = "black";
-									ctx.fillText(cap,gridNumberShifti,gridNumberShiftj);
+									ctx.fillText(zaokruzi,BrojUGriduPomaki,BrojUGriduPomakj);
 									
-									// }
+							
 									
 								}
 								
 									}
 								
-								if (typeOfBox [i][j]=="d"){
+								if (rubniUvjet [i][j]=="d"){
 									ctx.fillStyle ="black";
 								ctx.font = "15px Arial";
 										
-										ctx.fillText(valueOfBox[i][j],gridNumberShifti,gridNumberShiftj);
+										ctx.fillText(potencijal[i][j],BrojUGriduPomaki,BrojUGriduPomakj);
 								ctx.font = "bold 9px Arial";	
 								}
 								
@@ -870,85 +676,66 @@
 							
 							
 								}
-							
-							
-							
-							
-							
-							
+	
 						}
 
-
 						//GLAVNO!
-						function finiteDifferenceIteration() {
-							
-							
-							biggest=0;
-							smallest=50000000000000;
-							//largest delta
-							 largest=0;
+						function konacneRazlikeIteracija() {
+	
+							najveci=0;
+							najmanji=50000000000000;					
+							 najveciDelta=0;
 						
 						
-							for (var i = 0; i < rowNumber; i++) {
+							for (var i = 0; i < brojRedova; i++) {
 
-								
 
-								
-
-								for (var j = 0; j < columnNumber; j++) {
-									
-									
+								for (var j = 0; j < brojStupaca; j++) {
 									
 
-								
 								//deklaranje varijabli koje koristimo u glavnoj jednadzbi
-								//deklaranje varijabli koje koristimo u glavnoj jednadzbi
+
 								
-								
-			
-								
-									if (i==0|| j==0 || i==widthG-1 || j==heightG-1){
+									if (i==0|| j==0 || i==sirinaG-1 || j==visinaG-1){
 								
 									
 									}
 								else {
 									
-									var desno = valueOfBox[i+1][j];
-									var dole = valueOfBox[i][j+1];
-									var levo = valueOfBox[i-1][j];
-									var gore = valueOfBox[i][j-1];
+									var desno = potencijal[i+1][j];
+									var dolje = potencijal[i][j+1];
+									var lijevo = potencijal[i-1][j];
+									var gore = potencijal[i][j-1];
 									
 								}
 						
 								
 								//pregled dal se nalazimo na "d" ili "n", ako ne idemo s iteracijom	
-									
-									
-									if (typeOfBox[i][j]==="d" || typeOfBox[i][j]==="n" ) {
+
+									if (rubniUvjet[i][j]==="d" || rubniUvjet[i][j]==="n" ) {
 						
 											}
-											
-											
+			
 									else
 				
 										//prvo dal smo na rubu, i onda jednadzba
 									
 									{
 										
-										if (typeOfBox[i+1][j]==="n" )
+										if (rubniUvjet[i+1][j]==="n" )
 											
 											{
 												
-												desno = valueOfBox[i][j];
+												desno = potencijal[i][j];
 												
 											}
 										
 										
-											if (typeOfBox[i-1][j]==="n" )
+											if (rubniUvjet[i-1][j]==="n" )
 											
 											{
 												
-												levo = valueOfBox[i][j];
+												lijevo = potencijal[i][j];
 												
 											}
 									
@@ -956,69 +743,61 @@
 										
 										
 										
-											if (typeOfBox[i][j+1]==="n" )
+											if (rubniUvjet[i][j+1]==="n" )
 											
 											{
 												
-												dole = valueOfBox[i][j];
+												dolje = potencijal[i][j];
 												
 											}
 											
 											
 											
-												if (typeOfBox[i][j-1]==="n" )
+												if (rubniUvjet[i][j-1]==="n" )
 											
 											{
 												
-												gore = valueOfBox[i][j];
+												gore = potencijal[i][j];
 												
 											}
 										
 										
 										
-										//jednadzba s deltom i biggest smallest
+										//jednadzba s deltom i najveci najmanji
 									
-										 oldValueOfBox =valueOfBox[i][j];
+										 stariPotencijal =potencijal[i][j];
+ 
+										 potencijal[i][j] = 0.25*(gore+dolje+lijevo+desno);
+										 delta=potencijal[i][j]-stariPotencijal;
 										 
-										
-										
-										 
-										 valueOfBox[i][j] = 0.25*(gore+dole+levo+desno);
-										 delta=valueOfBox[i][j]-oldValueOfBox;
-										 
-									 if (biggest < valueOfBox[i][j]){
+									 if (najveci < potencijal[i][j]){
 											 
-											 biggest=valueOfBox[i][j];
+											 najveci=potencijal[i][j];
 										 }
 										 
-										 if (valueOfBox[i][j]==0){}
+										 if (potencijal[i][j]==0){}
 										 
 										 else{
 										
-										if (smallest > valueOfBox[i][j]){
+										if (najmanji > potencijal[i][j]){
 											 
-											 smallest=valueOfBox[i][j];
+											 najmanji=potencijal[i][j];
 										 }
 										 
 										 
 										 }
 										
 										
-										 if (largest < Math.abs(delta)){
+										 if (najveciDelta < Math.abs(delta)){
 											 
-											 largest=Math.abs(delta);
+											 najveciDelta=Math.abs(delta);
 										 }
 										 
-										
-										
-										
+	
 										
 									}
 									
-									
-									
-								
-																																								
+																																	
 
 								}
 		
@@ -1028,37 +807,32 @@
 							
 						}
 						
-						
-						
 						//iscrtavanje grida
 							
-						function gridBorders() 
+						function ruboviResetke() 
 							
 						{
 							
 
-							for (var i = 0; i <= height; i += boxSize) {
+							for (var i = 0; i <= visina; i += boxVelicina) {
 							 
 								ctx.beginPath();
 								ctx.lineWidth = 0.4;
 								ctx.moveTo(0, i);
-								ctx.lineTo(width, i);
+								ctx.lineTo(sirina, i);
 								ctx.stroke();
 					
 							}
 
-							for (var j = 0; j <= width; j += boxSize) {
+							for (var j = 0; j <= sirina; j += boxVelicina) {
 								 
 								ctx.beginPath();
 								ctx.lineWidth = 0.4;
 								ctx.moveTo(j, 0);
-								ctx.lineTo(j, height);
+								ctx.lineTo(j, visina);
 								ctx.stroke();
 							}
-
-
-
-							
+				
 							}
 // za odabir n ili d ili ocisti
 							
@@ -1066,64 +840,60 @@
 								
 								
 								
-								var choose = document.getElementById("odaberi");
-							var border = choose.options[choose.selectedIndex].value;
-							if (border == "1") {
+								var odaberi = document.getElementById("odaberi");
+							var unos = odaberi.options[odaberi.selectedIndex].value;
+							if (unos == "1") {
 								 broj = document.getElementById("broj").value;
-								var gridNumberShifti=boxSize*sX+1;
-								var gridNumberShiftj=boxSize*sY+(0.9*boxSize);
+								var BrojUGriduPomaki=boxVelicina*sX+1;
+								var BrojUGriduPomakj=boxVelicina*sY+(0.9*boxVelicina);
 								
-								typeOfBox[sX][sY] = "d";
-								valueOfBox[sX][sY] = parseFloat(broj);
+								rubniUvjet[sX][sY] = "d";
+								potencijal[sX][sY] = parseFloat(broj);
 								
 								
 								ctx.fillStyle = "rgba(104, 180, 247, 1)";  
-								ctx.fillRect((sX * boxSize)+1.5, (sY * boxSize)+1.5, boxSize-3, boxSize-3);
+								ctx.fillRect((sX * boxVelicina)+1.5, (sY * boxVelicina)+1.5, boxVelicina-3, boxVelicina-3);
 								ctx.fillStyle ="black";
 								ctx.font = "15px Arial";
 										
-										ctx.fillText(valueOfBox[sX][sY],gridNumberShifti,gridNumberShiftj);
+										ctx.fillText(potencijal[sX][sY],BrojUGriduPomaki,BrojUGriduPomakj);
 										
 										ctx.font = "bold 9px Arial";
 								
-							} else if (border == "2") {
-								typeOfBox[sX][sY] = "n";
-								valueOfBox[sX][sY] = 0.0;
+							} else if (unos == "2") {
+								rubniUvjet[sX][sY] = "n";
+								potencijal[sX][sY] = 0.0;
 								ctx.fillStyle = "rgba(167, 30, 6, 1)";
 								
-									ctx.fillRect((sX * boxSize)+1.5, (sY * boxSize)+1.5, boxSize-3, boxSize-3);
+									ctx.fillRect((sX * boxVelicina)+1.5, (sY * boxVelicina)+1.5, boxVelicina-3, boxVelicina-3);
 							
 																
 							}
 							
 							
-							else if (border=="3"){
+							else if (unos=="3"){
 								ctx.fillStyle = "white";
-								typeOfBox[sX][sY] = "h";
+								rubniUvjet[sX][sY] = "h";
 								
-								valueOfBox[sX][sY] = 0.00;
-								ctx.fillRect((sX * boxSize)+1.5, (sY * boxSize)+1.5, boxSize-3, boxSize-3);
+								potencijal[sX][sY] = 0.00;
+								ctx.fillRect((sX * boxVelicina)+1.5, (sY * boxVelicina)+1.5, boxVelicina-3, boxVelicina-3);
 								
-								
-							}
-							
-							
-							
-							// console.log(sX+"obicni sx");
-								// console.log(sY+"obicni sy");
-								
-								// console.log(valueOfBox [sX][sY]+"VAZNO value");
-								// console.log(typeOfBox [sX][sY]+"VAZNO type");
-								// console.log(sY+"obicni sy");
 								
 							}
 							
 							
 							
-							// za crtanje (hadnleClick)
-							function handleClick(e) {
-							var i = parseInt(Math.floor(e.offsetX / boxSize));
-							var j = parseInt(Math.floor(e.offsetY / boxSize));
+				
+								
+							}
+							
+							
+							
+							// za crtanje (handleClick)
+							
+							function lokacijaClicka(e) {
+							var i = parseInt(Math.floor(e.offsetX / boxVelicina));
+							var j = parseInt(Math.floor(e.offsetY / boxVelicina));
 							
 							sX = i;
 							sY = j;
@@ -1131,78 +901,66 @@
 							promjena(sX,sY);
 							
 							
-							
-							
-							
-							
-
 						}
 						
 						
 						//funkcija za strelicu
 						
-							function canvas_arrow(context, fromx, fromy, tox, toy){
-		var headlen = 4;	// duzina glave u pixelima
-		var dx = tox-fromx;
-		var dy = toy-fromy;
-		var angle = Math.atan2(dy,dx);
+						
+						function canvas_strelica(context, odx, ody, premax, premay){
+	
+		var duzinaGlave = 4;	// duzina glave u pixelima
+		var dx = premax-odx;
+		var dy = premay-ody;
+		var kut = Math.atan2(dy,dx);
 		context.lineWidth=1;
-		context.moveTo(fromx, fromy);
-		context.lineTo(tox, toy);
-		context.lineTo(tox-headlen*Math.cos(angle-Math.PI/6),toy-headlen*Math.sin(angle-Math.PI/6));
-		context.moveTo(tox, toy);
-		context.lineTo(tox-headlen*Math.cos(angle+Math.PI/6),toy-headlen*Math.sin(angle+Math.PI/6));
+		context.moveTo(odx, ody);
+		context.lineTo(premax, premay);
+		context.lineTo(premax-duzinaGlave*Math.cos(kut-Math.PI/6),premay-duzinaGlave*Math.sin(kut-Math.PI/6));
+		context.moveTo(premax, premay);
+		context.lineTo(premax-duzinaGlave*Math.cos(kut+Math.PI/6),premay-duzinaGlave*Math.sin(kut+Math.PI/6));
 	}
 						
-						//funkcija za glavu vektora
+				
 						
+						function pokaziVektore() {
 						
-						function showVectors() {
-							// ctx.clearRect(0, 0, canvas.width, canvas.height);
-									// vectorXMax=0;
-									// vectorXMin=50000000000;
-								var	 vectorXPercentage;
-								var	 vectorYPercentage;
-								// var vectorXBiggerThanMin;
-								// var vectorYBiggerThanMin;
+								var	 vektorXPostotak;
+								var	 vektorYPostotak;
 									ctx.fillStyle="black";
 									ctx.font = "8px Arial";
 									var krug = '\u25C9';
-							for (var i = 0; i < rowNumber; i++) {
-
-								
+							for (var i = 0; i < brojRedova; i++) {
 
 
-								for (var j = 0; j < columnNumber; j++) {
+								for (var j = 0; j < brojStupaca; j++) {
 
-								
-									var gridNumberShifti=boxSize*i+(0.4*boxSize);
-									var gridNumberShiftj=boxSize*j+(0.6*boxSize); 
+									var BrojUGriduPomaki=boxVelicina*i+(0.4*boxVelicina);
+									var BrojUGriduPomakj=boxVelicina*j+(0.6*boxVelicina); 
 									
-										var gridNumberShiftiBroj=boxSize*i+1;
-								var gridNumberShiftjBroj=boxSize*j+(0.9*boxSize);	
-									var cap =+valueOfBox[i][j].toFixed(2);
+									var BrojUGriduPomakiBroj=boxVelicina*i+1;
+									var BrojUGriduPomakjBroj=boxVelicina*j+(0.9*boxVelicina);	
+									var zaokruzi =+potencijal[i][j].toFixed(2);
 								
-								if (typeOfBox [i][j]=="d"){
+								if (rubniUvjet [i][j]=="d"){
 									ctx.fillStyle ="black";
 								ctx.font = "15px Arial";
 										
-										ctx.fillText(cap,gridNumberShiftiBroj,gridNumberShiftjBroj);
+										ctx.fillText(zaokruzi,BrojUGriduPomakiBroj,BrojUGriduPomakjBroj);
 								
 								}
 								
-									
-									
-									if (i==0|| j==0 || i==widthG-1 || j==heightG-1){
+	
+									if (i==0|| j==0 || i==sirinaG-1 || j==visinaG-1){
 								
 									
 									}
 								else {
 									
-									var desno = valueOfBox[i+1][j];
-									var dole = valueOfBox[i][j+1];
-									var levo = valueOfBox[i-1][j];
-									var gore = valueOfBox[i][j-1];
+									var desno = potencijal[i+1][j];
+									var dolje = potencijal[i][j+1];
+									var lijevo = potencijal[i-1][j];
+									var gore = potencijal[i][j-1];
 									
 								}
 						
@@ -1210,31 +968,31 @@
 								//pregled dal se nalazimo na "d" ili "n", ako ne idemo s iteracijom	
 									
 									
-									if (typeOfBox[i][j]==="d" || typeOfBox[i][j]==="n" ) {
+									if (rubniUvjet[i][j]==="d" || rubniUvjet[i][j]==="n" ) {
 						
 											}
 											
 											
 									else
 				
-										//prvo dal smo na rubu, i onda jednadzba
+										//prvo da li smo na rubu, i onda jednadzba
 									
 									{
 										
-										if (typeOfBox[i+1][j]==="n" )
+										if (rubniUvjet[i+1][j]==="n" )
 											
 											{
 												
-												desno = valueOfBox[i][j];
+												desno = potencijal[i][j];
 												
 											}
 										
 										
-											if (typeOfBox[i-1][j]==="n" )
+											if (rubniUvjet[i-1][j]==="n" )
 											
 											{
 												
-												levo = valueOfBox[i][j];
+												lijevo = potencijal[i][j];
 												
 											}
 									
@@ -1242,21 +1000,21 @@
 										
 										
 										
-											if (typeOfBox[i][j+1]==="n" )
+											if (rubniUvjet[i][j+1]==="n" )
 											
 											{
 												
-												dole = valueOfBox[i][j];
+												dolje = potencijal[i][j];
 												
 											}
 											
 											
 											
-												if (typeOfBox[i][j-1]==="n" )
+												if (rubniUvjet[i][j-1]==="n" )
 											
 											{
 												
-												gore = valueOfBox[i][j];
+												gore = potencijal[i][j];
 												
 											}
 										
@@ -1267,82 +1025,71 @@
 										//jednadzba 
 									
 										 
-										var  vectorX= -(desno-levo)/2
-										var  vectorY= -(dole-gore)/2
+										var  vektorX= -(desno-lijevo)/2
+										var  vektorY= -(dolje-gore)/2
 										 
 										
-										 if (vectorXMax < vectorX   ){
+										 if (vektorXMax < vektorX   ){
 											 
-											 vectorXMax=vectorX;
+											 vektorXMax=vektorX;
 											 
 											 
 											 
 										 }
 										 
 										 
-										  if (vectorYMax < vectorY   ){
+										  if (vektorYMax < vektorY   ){
 											 
-											 vectorYMax=vectorY;
+											 vektorYMax=vektorY;
 											 
 											 
 											 
 										 }
 										 
-										 
-										 
+
 										
-										 
-										 
-										
-										if (vectorXMin > vectorX ){
+										if (vektorXMin > vektorX ){
 											 
-											 	 vectorXMin=vectorX;
-										
-											 
-											 
-											 
-											 
+											 	 vektorXMin=vektorX;
+							 
 										 }
 										 
 										 	
-										if (vectorYMin > vectorY ){
+										if (vektorYMin > vektorY ){
 											 
-											 	 vectorYMin=vectorY;
-										
-											 
-								
-											 
+											 	 vektorYMin=vektorY;
+			 
 											 
 										 }
 										 
 										 
-										 if (vectorXMax>vectorYMax){
+										 if (vektorXMax>vektorYMax){
 											 
-											 vectorXYMax=vectorXMax;
+											 vektorXYMax=vektorXMax;
 											 
 										 }
 										
 										else{
 											
-											vectorXYMax=vectorYMax;
+											vektorXYMax=vektorYMax;
 										}
 										
 										
 										
-											 if (vectorXMin<vectorYMin){
+											 if (vektorXMin<vektorYMin){
 											 
-											 vectorXYMin=vectorXMin;
+											 vektorXYMin=vektorXMin;
 											 
 										 }
 										
 										else{
 											
-											vectorXYMin=vectorYMin;
+											vektorXYMin=vektorYMin;
 										}
 										
-										if(Math.abs(vectorXYMin)>Math.abs(vectorXYMax)){
+										if(Math.abs(vektorXYMin)>Math.abs(vektorXYMax)){
 											
-											vectorMaxAbsolute=Math.abs(vectorXYMin);
+											vektorMaxAbsolutni=Math.abs(vektorXYMin);
 											
 										
 										}
@@ -1351,95 +1098,41 @@
 										else {
 											
 											
-											vectorMaxAbsolute=Math.abs(vectorXYMax);
+											vektorMaxAbsolutni=Math.abs(vektorXYMax);
 											
 										}
-										
-										 // deltaVectorX = vectorXMax-vectorXMin;
-										 // deltaVectorY = vectorYMax-vectorYMin;
-										 
-										// deltaVectorXY= vectorXYMax-vectorXYMin;
-										
-										 vectorXPercentage=(vectorX/vectorMaxAbsolute);
-										 vectorYPercentage=(vectorY/vectorMaxAbsolute);
-										 
-									// if (vectorX<0){
-										
-										  // vectorXBiggerThanMin=(vectorX-vectorXYMin)*(-1);
-										  
-										
-									// }
-										 
-									// else{
-										 // vectorXBiggerThanMin=vectorX-vectorXYMin;
-										
-									// }
-										 
-										 		 
-									// if (vectorY<0){
-										
-										  // vectorYBiggerThanMin=(vectorY-vectorXYMin)*(-1);
-										
-									// }
-										 
-									// else{
-										 // vectorYBiggerThanMin=vectorY-vectorXYMin;
-										
-									// }
-
-									// console.log(" polje X: "+ i +" polje Y:" +j);
-									// console.log(vectorX+ " "+vectorY+ " Vector x i y vrijednosti");
-	
-									  // console.log(" ");
-									  // console.log(vectorXMax+" "+vectorXMin +"vector x max i min");
-									  // console.log(vectorYMax+" "+vectorYMin+"vector y max i min");
-									    // console.log(vectorXYMax+" "+vectorXYMin+"vector xy max i min i max absolute!!" + vectorMaxAbsolute);
-									  // console.log(" ");
-									  // console.log( vectorXPercentage + "postotak x");
-									  // console.log( vectorYPercentage+"postotak y");
 									
-									 
-									  // console.log(" ");
-									  // console.log(" ");
-									
-									if(vectorBoolean==1){
+										 vektorXPostotak=(vektorX/vektorMaxAbsolutni);
+										 vektorYPostotak=(vektorY/vektorMaxAbsolutni);
+		
+									if(vektorBoolean==1){
 
 									
 									
 									ctx.beginPath();
-									// ctx.moveTo(gridNumberShifti+3,gridNumberShiftj-3);
-									
-									 // ctx.lineTo(gridNumberShifti+3+vectorX,gridNumberShiftj-3+vectorY);
-									   // ctx.lineTo(gridNumberShifti+3+vectorXPercentage*75,gridNumberShiftj-3+vectorYPercentage*75);
-							
-										  canvas_arrow(ctx,gridNumberShifti+3,gridNumberShiftj-3,gridNumberShifti+3+vectorXPercentage*50,gridNumberShiftj-3+vectorYPercentage*50);
+
+										  canvas_strelica(ctx,BrojUGriduPomaki+3,BrojUGriduPomakj-3,BrojUGriduPomaki+3+vektorXPostotak*50,BrojUGriduPomakj-3+vektorYPostotak*50);
 										ctx.stroke();
 									ctx.font = "8px Arial";	
-									
-								
-									
-									ctx.fillText(krug,gridNumberShifti,gridNumberShiftj);
+	
+									ctx.fillText(krug,BrojUGriduPomaki,BrojUGriduPomakj);
 									
 									
 									}
-										 
-										 
-									
+						
 									}
-									
-		
 
 								}
 
 							}
 
-							if(vectorBoolean==0){
-								vectorBoolean=1;
+							if(vektorBoolean==0){
+								vektorBoolean=1;
 							}
 							
 							else {
 								
-								vectorBoolean=0;
+								vektorBoolean=0;
 							}
 							
 							
@@ -1447,166 +1140,99 @@
 
 					
 							
-		// funkcija submit 
+		// funkcija potvrdi 
 		
-		function submit(){
+		function potvrdi(){
 			 ctx.font = "bold 9px Arial";
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			gridBorders() ;
-			if ( document.getElementById("checkC").checked==true)
+			ruboviResetke() ;
+			if ( document.getElementById("provjeriC").checked==true)
 			{
 				
-				showValuesInColor();
-				gridBorders() ;
-				//showEdges();
+				prikaziVrijednostiBojom();
+				ruboviResetke() ;
 				
-				console.log("checked boja");
 			}
 			
 			
-			if (document.getElementById("checkN").checked==true){
+			if (document.getElementById("provjeriV").checked==true){
 				
-				// if (document.getElementById("checkN").checked==true && document.getElementById("checkNN").checked==true) {
-					
-					// console.log("oba dva");
-				// }
 				
-				// else {
+				pokaziRubove();
 				
-								// if ( document.getElementById("checkC").checked==true){
-									
-									
-										  // gridBorders() ;
-										
-										 // showNumbers() ;
-								// }
-								
-								//  else {
-								// ctx.clearRect(0, 0, canvas.width, canvas.height);
-								 
-										// showEdges();
-										
-										  // gridBorders() ;
-										 // showNumbers() ;
-				
-			
-				
-				// }
-				// }
-				console.log("vektorCHECK!");
-				showEdges();
-				
-					vectorXMax=-50000000;
-						 vectorXMin=50000000000;
-							vectorYMax=-50000000;
-						 vectorYMin=50000000000;
-							vectorXYMax=-50000000;
-						 vectorXYMin=50000000000;
-							showVectors();
-							showVectors() ;
+					vektorXMax=-50000000;
+						 vektorXMin=50000000000;
+							vektorYMax=-50000000;
+						 vektorYMin=50000000000;
+							vektorXYMax=-50000000;
+						 vektorXYMin=50000000000;
+							pokaziVektore();
+							pokaziVektore() ;
 				
 				
 			}
 			
-			if ( document.getElementById("checkNN").checked==true)
+			if ( document.getElementById("provjeriN").checked==true)
 			{
+
+										pokaziRubove();  
+										 pokaziBrojeve() ;
 				
-				
-										showEdges();
-										  
-										 showNumbers() ;
-				
-								
 				
 			}
 			
-			
-		
-			
+
 		}
 				
 
 //listener za ekvipotencijale
 
-document.getElementById('submitE').addEventListener('click', function() {
+document.getElementById('posaljiE').addEventListener('click', function() {
 					
 					ekvipotencijale(document.getElementById("ekvipotencijala").value);
-					showNumbersDirichlet();
+					pokaziBrojeveDrichlet();
 		
 		
 					
 						 }, false);	
+			
+			
+		//listener za potvrdi 
 
 
-				
-							
-		//listener za submit 
-
-		
-		
-
-	 document.getElementById('submit').addEventListener('click', function() {
+	 document.getElementById('potvrdi').addEventListener('click', function() {
 					
-						submit();
+						potvrdi();
 		
 					
 						 }, false);		
 							
-//listener za ciscenje
-
-	 // document.getElementById('clear').addEventListener('click', function() {
-		// //					 ctx.clearRect(0, 0, canvas.width, canvas.height);
-							
-						
-						// // showNumbers();
-						// // gridBorders();
-							// vectorXMax=-50000000;
-						 // vectorXMin=50000000000;
-							// vectorYMax=-50000000;
-						 // vectorYMin=50000000000;
-							// vectorXYMax=-50000000;
-						 // vectorXYMin=50000000000;
-							// showVectors();
-							// showVectors() ;
-						
-							// console.log("bla2");
-							
-					
-						 // }, false);
-						
-						
+			
 		//listener za iteriranje				
 						
 						document.getElementById('start').addEventListener('click', function() {
 							var brojIteracija = document.getElementById("brojIteracija").value;
 							if(brojIteracija % 1 === 0 && isNaN(broj)==false  ) 
-							// && broj % 1 === 0
+						
 							{
 				for (var i=0; i < brojIteracija; i++){
-								finiteDifferenceIteration();
-								console.log(brojIteracija);
+								konacneRazlikeIteracija();
 							}
 							
-							document.getElementById("deltaHtml").innerHTML = "Najveća delta iteracije: "+largest;
+							document.getElementById("deltaHtml").innerHTML = "Najveća delta iteracije: "+najveciDelta;
 							
 							
-							document.getElementById("maxHtml").innerHTML = "Maksimalna vrijednost: "+biggest;
+							document.getElementById("maxHtml").innerHTML = "Maksimalna vrijednost: "+najveci;
 							
 							
-							document.getElementById("minHtml").innerHTML = "Minimalna vrijednost: "+smallest;
+							document.getElementById("minHtml").innerHTML = "Minimalna vrijednost: "+najmanji;
 							
 						
 							
-							submit();
+							potvrdi();
 							ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-							ruler();	
-							
-							// ctx.clearRect(0, 0, canvas.width, canvas.height);
-								// showEdges();
-								 // ctx.fillStyle = "black";
-										  // gridBorders() ;
-										 // showNumbers() ;
-							
+							koordSustav();	
+					
 }	
 				else {
 					window.alert("Upisite broj, a ne slova, i/ili, definirajte dirichleta");
@@ -1614,62 +1240,27 @@ document.getElementById('submitE').addEventListener('click', function() {
        
 				}
 							
-							
-							
-						
-					
+
 						}, false);
 
-	  //listener 3 gumb		
-						
-						 // document.getElementById('changeGrid').addEventListener('click', function() {
-							 
-						
-							// // ctx.clearRect(0, 0, canvas.width, canvas.height);
-						// // width=widthG*boxSize;  
-						 // // height=heightG*boxSize;
-						 // // canvas = document.createElement('canvas'),ctx = canvas.getContext("2d");
-						 // // canvas.width=width;
-						// // canvas.height=height;
-						
-							// // ctx.clearRect(0, 0, canvas.width, canvas.height);
-					
-							// // gridSize();
-							// // width=widthG*boxSize;  
-						 // // height=heightG*boxSize;
-							// // matrix();
-						// // gridBorders();
-						// // showNumbers();
-					// ekvipotencijale(document.getElementById("ekvipotencijala").value);
-			
-					
-						 // }, false);
 
+						 //skalirajGridKlizac ilitiga za skalirat canvas div
 
+						 var skalirajGridKlizac = document.getElementById("klizac");
+						var izlaz = skalirajGridKlizac.value;
 
-
-						 
-						 //rangeSlider ilitiga za scale
-						 
-						 
-						 var rangeSlider = document.getElementById("myRange");
-						var output = rangeSlider.value;
-
-
-						rangeSlider.oninput = function() {
+						skalirajGridKlizac.oninput = function() {
 
   
-			output = rangeSlider.value;
-			outputPercentage=output*0.01
-			console.log(output);
-			document.getElementById("canvasesdiv").style.transform = "scale("+outputPercentage+")";
+			izlaz = skalirajGridKlizac.value;
+			var izlazPostotak=izlaz*0.01
+			document.getElementById("canvasesdiv").style.transform = "scale("+izlazPostotak+")";
 
 					}
-//
 
-						matrix();
-						gridBorders();
-						showEdges();
+						inicijalizacija();
+						ruboviResetke();
+						pokaziRubove();
 						
 					
 					
