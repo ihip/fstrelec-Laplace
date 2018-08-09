@@ -38,7 +38,7 @@
 						var najmanji;
 						var najveci=0;
 						var deltaExtrema=0;
-						var valueMSmallest=0;
+						var iznosRazNajmanjeg=0;
 						var rgbPostotak;
 						var rgbPostotakIntezitet;
 						var rgbPostotakString;
@@ -601,26 +601,7 @@
 								ctx.clearRect(0, 0, canvas.width, canvas.height);
 								pokaziRubove();
 								ruboviResetke();
-
-							for (var i = 0; i < brojRedova; i++) {
-
-
-								for (var j = 0; j < brojStupaca; j++) {
-
-								
-								
-									if (rubniUvjet[i][j]=="h"){
-										
-									 										 																																				
-										 											
-									}
-	
-
-								}
-
-
-								}
-								
+							
 								deltaExtrema=najveci-najmanji;
 
 							for (var i = 0; i < brojRedova; i++) {
@@ -634,15 +615,15 @@
 									if (rubniUvjet[i][j]=="h"){
 								
 								
-								valueMSmallest=potencijal[i][j]-najmanji;
+								iznosRazNajmanjeg=potencijal[i][j]-najmanji;
 								
-								rgbPostotak=valueMSmallest/deltaExtrema;
+								rgbPostotak=iznosRazNajmanjeg/deltaExtrema;
 								rgbPostotakIntezitet=Math.round(rgbPostotak*255);
 							var rgbPostotakIntezitetSuprotno=255-rgbPostotakIntezitet;
 							var zaokruzi =+potencijal[i][j].toFixed(2);
 								
 						
-				var	bojaString="rgba(" + Math.round(rgbPostotakIntezitet*1) + "," + (Math.round(rgbPostotakIntezitetSuprotno*0.5)) + "," + Math.round(rgbPostotakIntezitetSuprotno*1) + ")";
+				var	bojaString="rgba(" + Math.round(rgbPostotakIntezitet*1) + "," + (Math.round(rgbPostotakIntezitetSuprotno*0.5)) + "," + Math.round(rgbPostotakIntezitetSuprotno*1) +"," +1+ ")";
 					
 
 								ctx.fillStyle = bojaString;
@@ -808,7 +789,8 @@
 						}
 						
 						//iscrtavanje grida
-							
+							//function ruboviResetke() preuzeto i modificirano sa:
+						//	http://rg.c-hip.net/2013/seminari/cvrtila/rjesenje.html  (Cvrtila 2013) 
 						function ruboviResetke() 
 							
 						{
@@ -905,11 +887,12 @@
 						
 						
 						//funkcija za strelicu
-						
+						//function canvas_strelica Uzeto sa:https://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag (Cieslewski, 2011)
 						
 						function canvas_strelica(context, odx, ody, premax, premay){
 	
 		var duzinaGlave = 4;	// duzina glave u pixelima
+		
 		var dx = premax-odx;
 		var dy = premay-ody;
 		var kut = Math.atan2(dy,dx);
