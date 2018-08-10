@@ -424,8 +424,8 @@
 
 									
 								
-							var interpolationCenteri=boxVelicina*i+(0.5*boxVelicina-2);
-							var interpolationCenterj=boxVelicina*j+(0.5*boxVelicina); 
+							var centarInterpolacijei=boxVelicina*i+(0.5*boxVelicina-2);
+							var centarInterpolacijej=boxVelicina*j+(0.5*boxVelicina); 
 							var intezitet=potencijal[i][j];
 							
 							
@@ -488,12 +488,6 @@
 										ctx.stroke();
 												
 								
-									if (prviBroj==1){
-										
-											
-											
-										}	
-										
 										
 										
 											}
@@ -536,8 +530,8 @@
 	
 												nasliSmoGa(intezitetR);
 												
-												xMeta.push(interpolationCenteri+udaljenost);
-												yMeta.push(interpolationCenterj);
+												xMeta.push(centarInterpolacijei+udaljenost);
+												yMeta.push(centarInterpolacijej);
 												
 			
 											}
@@ -547,8 +541,8 @@
 											 var intezitetL=potencijal[i-1][j];
 										
 											 nasliSmoGa(intezitetL);
-											 xMeta.push(interpolationCenteri-udaljenost);
-												 yMeta.push(interpolationCenterj);
+											 xMeta.push(centarInterpolacijei-udaljenost);
+												 yMeta.push(centarInterpolacijej);
 											
 											
 										}
@@ -559,8 +553,8 @@
 											
 										
 											nasliSmoGa(intezitetD);
-											xMeta.push(interpolationCenteri);
-												 yMeta.push(interpolationCenterj+udaljenost);
+											xMeta.push(centarInterpolacijei);
+												 yMeta.push(centarInterpolacijej+udaljenost);
 												 
 		 
 											
@@ -569,8 +563,8 @@
 												var intezitetU=potencijal[i][j-1];
 												
 												 nasliSmoGa(intezitetU);
-											 xMeta.push(interpolationCenteri);
-												yMeta.push(interpolationCenterj-udaljenost);
+											 xMeta.push(centarInterpolacijei);
+												yMeta.push(centarInterpolacijej-udaljenost);
 
 												
 												 }
