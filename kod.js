@@ -58,7 +58,14 @@
 						
 						canvas.addEventListener('mousedown', clickDolje);
 						canvas.addEventListener('mouseup', clickGore);
-						
+						canvas.addEventListener('dblclick', dvostrukiKlik);
+				
+						function dvostrukiKlik(e) {
+							var i = parseInt(Math.floor(e.offsetX / velicinaKvadrata));
+							var j = parseInt(Math.floor(e.offsetY / velicinaKvadrata));
+							
+							alert("Čvor: " + String(i) + " " + String(j) + " " + String(potencijal[i][j]));
+						}
 				
 						function clickDolje(){								
 							
