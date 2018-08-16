@@ -91,7 +91,7 @@
 						function velicinaResetke() {
 							 visinaP = prompt("Visina presjeka", "5");
 							sirinaP = prompt("Širina presjeka", "8");
-							 brojCvorova = prompt("Broj čvorova po jedinici visine/širine", "5");
+							 brojCvorova = prompt("Broj čvorova po jedinici duljine", "5");
 						
 			function daLiJeBroj(n) { return !isNaN(parseFloat(n)) && !isNaN(n - 0) }
 			 
@@ -837,9 +837,9 @@
 							}
 				
 							}
-// za odabir n ili d ili ocisti
-							
-							function promjena(sX,sY){
+						// za odabir n ili d ili ocisti
+						
+							function promjena(i,j){
 								
 								
 								
@@ -847,28 +847,28 @@
 							var unos = odaberi.options[odaberi.selectedIndex].value;
 							if (unos == "1") {
 								 broj = document.getElementById("broj").value;
-								var BrojUGriduPomaki=velicinaKvadrata*sX+1;
-								var BrojUGriduPomakj=velicinaKvadrata*sY+(0.9*velicinaKvadrata);
+								var BrojUGriduPomaki=velicinaKvadrata*i+1;
+								var BrojUGriduPomakj=velicinaKvadrata*j+(0.9*velicinaKvadrata);
 								
-								rubniUvjet[sX][sY] = "d";
-								potencijal[sX][sY] = parseFloat(broj);
+								rubniUvjet[i][j] = "d";
+								potencijal[i][j] = parseFloat(broj);
 								
 								
 								ctx.fillStyle = "rgba(104, 180, 247, 1)";  
-								ctx.fillRect((sX * velicinaKvadrata)+1.5, (sY * velicinaKvadrata)+1.5, velicinaKvadrata-3, velicinaKvadrata-3);
+								ctx.fillRect((i * velicinaKvadrata)+1.5, (j * velicinaKvadrata)+1.5, velicinaKvadrata-3, velicinaKvadrata-3);
 								ctx.fillStyle ="black";
 								ctx.font = "15px Arial";
 										
-										ctx.fillText(potencijal[sX][sY],BrojUGriduPomaki,BrojUGriduPomakj);
+										ctx.fillText(potencijal[i][j],BrojUGriduPomaki,BrojUGriduPomakj);
 										
 										ctx.font = "bold 9px Arial";
 								
 							} else if (unos == "2") {
-								rubniUvjet[sX][sY] = "n";
-								potencijal[sX][sY] = 0.0;
+								rubniUvjet[i][j] = "n";
+								potencijal[i][j] = 0.0;
 								ctx.fillStyle = "rgba(167, 30, 6, 1)";
 								
-									ctx.fillRect((sX * velicinaKvadrata)+1.5, (sY * velicinaKvadrata)+1.5, velicinaKvadrata-3, velicinaKvadrata-3);
+									ctx.fillRect((i * velicinaKvadrata)+1.5, (j * velicinaKvadrata)+1.5, velicinaKvadrata-3, velicinaKvadrata-3);
 							
 																
 							}
@@ -876,10 +876,10 @@
 							
 							else if (unos=="3"){
 								ctx.fillStyle = "white";
-								rubniUvjet[sX][sY] = "h";
+								rubniUvjet[i][j] = "h";
 								
-								potencijal[sX][sY] = 0.00;
-								ctx.fillRect((sX * velicinaKvadrata)+1.5, (sY * velicinaKvadrata)+1.5, velicinaKvadrata-3, velicinaKvadrata-3);
+								potencijal[i][j] = 0.00;
+								ctx.fillRect((i * velicinaKvadrata)+1.5, (j * velicinaKvadrata)+1.5, velicinaKvadrata-3, velicinaKvadrata-3);
 								
 								
 							}
@@ -898,10 +898,9 @@
 							var i = parseInt(Math.floor(e.offsetX / velicinaKvadrata));
 							var j = parseInt(Math.floor(e.offsetY / velicinaKvadrata));
 							
-							sX = i;
-							sY = j;
+							
 
-							promjena(sX,sY);
+							promjena(i,j);
 							
 							
 						}
