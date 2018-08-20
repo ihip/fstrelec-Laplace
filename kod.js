@@ -8,7 +8,7 @@
 						var	sirinaP;
 						var	 brojCvorova;
 
-						var koefResetke;
+						var razmakCvorova;
 						
 						var	vektorXMax=-50000000;
 						var vektorXMin=50000000000;
@@ -97,9 +97,9 @@
 			 
 			 visinaR = visinaP*brojCvorova+1;
 			 sirinaR = sirinaP*brojCvorova+1;
-			 koefResetke=1/brojCvorova;
+			 razmakCvorova=1/brojCvorova;
 			 
-			 	document.getElementById("koefResetka").innerHTML = "Koeficijent rešetke: "+koefResetke;
+			 	document.getElementById("razmakC").innerHTML = "Razmak čvorova: "+razmakCvorova;
     
 		 if(visinaP % 1 === 0 && sirinaP % 1 === 0 && brojCvorova % 1 === 0  ) {
 				
@@ -132,8 +132,8 @@
    }	
 						//TEST ZA CANVAS 2 (fiz. koord.)
 						function koordSustav() {
-							var brojTrenutnoX=0-koefResetke;
-							var brojTrenutnoY=0-koefResetke;
+							var brojTrenutnoX=0-razmakCvorova;
+							var brojTrenutnoY=0-razmakCvorova;
 							var brojTrenutnoXC;
 							var brojTrenutnoYC;
 							ctx2.beginPath();
@@ -154,7 +154,7 @@
 						 ctx2.stroke();
 						for (var i=0;i<sirinaR;i++){
 						 //x os
-							brojTrenutnoX=(brojTrenutnoX+koefResetke)
+							brojTrenutnoX=(brojTrenutnoX+razmakCvorova)
 							brojTrenutnoXC=+brojTrenutnoX.toFixed(2);
 
 							
@@ -189,7 +189,7 @@
 						ctx2.moveTo(60-7,((1/2)*velicinaKvadrata+velicinaKvadrata*i));
 						ctx2.lineTo(60+7,((1/2)*velicinaKvadrata+velicinaKvadrata*i));
 						
-						brojTrenutnoY=(brojTrenutnoY+koefResetke);
+						brojTrenutnoY=(brojTrenutnoY+razmakCvorova);
 						brojTrenutnoYC=+brojTrenutnoY.toFixed(2);
 						
 								if (brojTrenutnoYC==Math.floor(brojTrenutnoYC)){
