@@ -89,8 +89,8 @@
 						//popup za velicinu grida
 
 						function velicinaResetke() {
-							 visinaP = prompt("Visina presjeka", "5");
-							sirinaP = prompt("Širina presjeka", "8");
+							 visinaP = prompt("Visina presjeka", "3");
+							sirinaP = prompt("Širina presjeka", "5");
 							 brojCvorova = prompt("Broj čvorova po jedinici duljine", "5");
 						
 			function daLiJeBroj(n) { return !isNaN(parseFloat(n)) && !isNaN(n - 0) }
